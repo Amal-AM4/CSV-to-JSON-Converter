@@ -20,7 +20,7 @@ document.getElementById('convertButton').addEventListener('click', function () {
 function csvToJson(csv) {
     const lines = csv.split('\n').filter(line => line.trim() !== ''); // Remove empty lines
     const result = [];
-    const headers = lines[0].split(',').map(header => header.trim()); // Trim headers
+    const headers = lines[0].split(',').map(header => header.trim().replace(/^"|"$/g, '')); // Trim headers and remove surrounding quotes
 
     for (let i = 1; i < lines.length; i++) {
         const obj = {};
@@ -29,7 +29,8 @@ function csvToJson(csv) {
         // Check if the current line has the same number of columns as headers
         if (currentLine.length === headers.length) {
             for (let j = 0; j < headers.length; j++) {
-                obj[headers[j]] = currentLine[j];
+                // Remove quotes from the value if present
+                obj[headers[j]] = currentLine[j].replace(/^"|"$/g, ''); // Remove surrounding quotes from values
             }
             result.push(obj);
         } else {
